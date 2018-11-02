@@ -88,6 +88,9 @@ goto :EOF
 :Deployment
 echo Handling node.js deployment.
 
+
+:: Technically should just build to a temp directory then only deploy the required files to the %DEPLOYMENT_TARGET%
+
 :: 1. KuduSync
 IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
   call :ExecuteCmd "%KUDU_SYNC_CMD%" -v 50 -f "%DEPLOYMENT_SOURCE%" -t "%DEPLOYMENT_TARGET%" -n "%NEXT_MANIFEST_PATH%" -p "%PREVIOUS_MANIFEST_PATH%" -i ".git;.hg;.deployment;deploy.cmd"
@@ -104,6 +107,13 @@ IF EXIST "%DEPLOYMENT_TARGET%\package.json" (
   IF !ERRORLEVEL! NEQ 0 goto error
   popd
 )
+
+echo building typescript
+SET node_modules=%DEPLOYMENT_TARGET%\node_modules
+:: 0. Build
+call "%node_modules%\.bin\node.cmd" "%node_modules%\typescript\bin\tsc" --project "%DEPLOYMENT_TARGET%"
+::--project "%DEPLOYMENT_TARGET%\index.ts"
+
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 goto end
