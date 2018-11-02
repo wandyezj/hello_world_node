@@ -108,11 +108,12 @@ IF EXIST "%DEPLOYMENT_TARGET%\package.json" (
   popd
 )
 
+:: 4. Build typescript
 echo building typescript
 SET node_modules=%DEPLOYMENT_TARGET%\node_modules
-:: 0. Build
+
 call "%node_modules%\.bin\node.cmd" "%node_modules%\typescript\bin\tsc" --project "%DEPLOYMENT_TARGET%"
-::--project "%DEPLOYMENT_TARGET%\index.ts"
+
 
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
